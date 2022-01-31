@@ -37,7 +37,9 @@ dependencies:
   
   qr_flutter: ^4.0.0
   qr_code_scanner: ^0.5.2
-  
+  google_fonts: ^2.2.0
+  flutter_rating_bar: ^4.0.0
+  custom_radio_grouped_button: ^2.1.1
   permission_handler: ^8.2.5
 
 dev_dependencies:
