@@ -1,5 +1,6 @@
 import 'dart:io';
 // import 'package:bus_review/screens/feedback_screen.dart';
+import 'package:bus_review/screens/admin_screen.dart';
 import 'package:bus_review/screens/feedback_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class _QRScanPageState extends State<QRScanPage> {
   QRViewController? controller;
   Barcode? barcode;
   PermissionStatus status = PermissionStatus.denied;
-  
+
   @override
   void initState() {
     _getCameraPermission();
@@ -42,13 +43,18 @@ class _QRScanPageState extends State<QRScanPage> {
 
   @override
   Widget build(BuildContext context) {
-    return (barcode==null)?SafeArea(
-        child: Scaffold(
-            body: (status.isGranted)
-                ? buildQrView(context)
-                : const Center(
-                    child: Text("Please Allow camera Permissions")))):
-                    FeedbackScreen(bar: barcode,);
+    return (barcode == null)
+        ? SafeArea(
+            child: Scaffold(
+                body: (status.isGranted)
+                    ? buildQrView(context)
+                    : const Center(
+                        child: Text("Please Allow camera Permissions"))))
+        : (barcode?.code == "226612@admin#!")
+            ? const AdminScreen()
+            : FeedbackScreen(
+                bar: barcode,
+              );
   }
 
   Widget buildQrView(BuildContext context) {
@@ -56,12 +62,11 @@ class _QRScanPageState extends State<QRScanPage> {
       key: qrKey,
       onQRViewCreated: onQRViewCreated,
       overlay: QrScannerOverlayShape(
-        borderColor: Colors.blue,
-        borderRadius:20,
-        borderLength:20,
-        borderWidth:10,
-        cutOutSize: MediaQuery.of(context).size.width*0.8),
-
+          borderColor: Colors.blue,
+          borderRadius: 20,
+          borderLength: 20,
+          borderWidth: 10,
+          cutOutSize: MediaQuery.of(context).size.width * 0.8),
     );
   }
 
@@ -71,11 +76,11 @@ class _QRScanPageState extends State<QRScanPage> {
     });
     controller.scannedDataStream.listen((barcode) {
       setState(() {
-        this.barcode=barcode;
+        this.barcode = barcode;
       });
-        // Navigator.push(context,
-        // MaterialPageRoute(builder: (context)=>FeedbackScreen()));
-     });
+      // Navigator.push(context,
+      // MaterialPageRoute(builder: (context)=>FeedbackScreen()));
+    });
   }
 
   void _getCameraPermission() async {

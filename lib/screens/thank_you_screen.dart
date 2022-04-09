@@ -14,7 +14,7 @@ class ThankYouScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              margin: EdgeInsets.only(bottom: 100),
+              margin: const EdgeInsets.only(bottom: 100),
               child: Text(
                 "Thank You For Your Feedback!",
                 textAlign: TextAlign.center,
@@ -51,10 +51,10 @@ class ThankYouScreen extends StatelessWidget {
       height: 60,
       child: ElevatedButton(
         style: style,
-        onPressed:  () => Navigator.popUntil(
-                    context,
-                    ModalRoute.withName('/'),
-                  ),
+        onPressed: () => Navigator.popUntil(
+          context,
+          ModalRoute.withName('/'),
+        ),
         child: const Text('Exit'),
       ),
     );
