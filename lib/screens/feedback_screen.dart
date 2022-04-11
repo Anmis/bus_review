@@ -1,5 +1,6 @@
 import 'package:bus_review/screens/thank_you_screen.dart';
 import 'package:bus_review/widgets/feedback_screen_bus_details.dart';
+import 'package:bus_review/widgets/feedback_widgets/transfer_to_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 
@@ -9,33 +10,53 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 // ignore: must_be_immutable
-class FeedbackScreen extends StatelessWidget {
+class FeedbackScreen extends StatefulWidget {
   Barcode? barcode;
+  TextEditingController? txt;
   FeedbackScreen({Key? key, Barcode? bar}) : super(key: key) {
     barcode = bar;
+    txt = TextEditingController();
   }
+
+  @override
+  State<FeedbackScreen> createState() => _FeedbackScreenState();
+}
+
+var context;
+
+class _FeedbackScreenState extends State<FeedbackScreen> {
   // ignore: prefer_typing_uninitialized_variables
-  var context;
+
   var userInputData = {
     "pace": 4,
     "busInfra": 4,
-    "busSears": "Yes",
+    "busSeats": "Yes",
     "driverBehaviour": 1,
     "remark": "",
     "overallRate": 4,
     "driverRate": 4
   };
+
   var data = [];
 
   @override
-  Widget build(BuildContext context) {
-    this.context = context;
-    String? qrText = barcode?.code;
+  void dispose() {
+    widget.txt?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext ctx) {
+    context = ctx;
+    String? qrText = widget.barcode?.code;
 
     if (qrText != null) data = qrText.split(",");
     return Scaffold(
         body: Stack(children: [
       buildBackGround("assets/form_back.jpg"),
+      // Container(
+      //   color: Colors.pink[200],
+      // ),
       SingleChildScrollView(
           child: Column(
         children: [
@@ -55,38 +76,40 @@ class FeedbackScreen extends StatelessWidget {
 
 //user form
   buildQuestionsContainer() {
-    return Container(
-        width: MediaQuery.of(context).size.width - 20,
-        padding: const EdgeInsets.all(10),
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            boxShadow: [
-              BoxShadow(
-                  offset: Offset(0, 4), blurRadius: 4, color: Colors.black26)
-            ]),
-        margin: const EdgeInsets.only(top: 70, left: 5, right: 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildQuestion("How do you rate pace of the driver ?"),
-            buildRating("pace"),
-            buildQuestion("How much rating you give for driver?"),
-            buildRating("driverRate"),
-            buildQuestion("Rate bus infrastructure?"),
-            buildRating("busInfra"),
-            buildQuestion("Does the bus have enough seats?"),
-            buildMultiOptions(
-                "busSeats", context, ["Yes", "No"], ["Yes", "No"]),
-            buildQuestion("How is driver’s behaviour?"),
-            buildMultiOptions(
-                "driverBehaviour", context, ["Good", "Bad"], [1, 0]),
-            buildQuestion("Do you have any remarks?"),
-            buildRemarkInputText("remark"),
-            buildQuestion("Rate your overall journey?"),
-            buildRating("overallRate")
-          ],
-        ));
+    return Center(
+      child: Container(
+          width: MediaQuery.of(context).size.width - 20,
+          padding: const EdgeInsets.all(10),
+          decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              boxShadow: [
+                BoxShadow(
+                    offset: Offset(0, 4), blurRadius: 4, color: Colors.black26)
+              ]),
+          margin: const EdgeInsets.only(top: 70, left: 5, right: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              buildQuestion("How do you rate pace of the driver ?"),
+              buildRating("pace"),
+              buildQuestion("How much rating you give for driver?"),
+              buildRating("driverRate"),
+              buildQuestion("Rate bus infrastructure?"),
+              buildRating("busInfra"),
+              buildQuestion("Does the bus have enough seats?"),
+              buildMultiOptions(
+                  "busSeats", context, ["Yes", "No"], ["Yes", "No"]),
+              buildQuestion("How is driver’s behaviour?"),
+              buildMultiOptions(
+                  "driverBehaviour", context, ["Good", "Bad"], [1, 0]),
+              buildQuestion("Do you have any remarks?"),
+              buildRemarkInputText("remark"),
+              buildQuestion("Rate your overall journey?"),
+              buildRating("overallRate")
+            ],
+          )),
+    );
   }
 
   buildQuestion(String question) {
@@ -110,10 +133,7 @@ class FeedbackScreen extends StatelessWidget {
         allowHalfRating: true,
         itemCount: 5,
         itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-        itemBuilder: (context, _) => const Icon(
-          Icons.star,
-          color: Colors.amber,
-        ),
+        itemBuilder: (context, _) => Icon(Icons.star, color: Colors.pink[200]),
         onRatingUpdate: (rating) {
           userInputData[s] = rating;
         },
@@ -121,6 +141,7 @@ class FeedbackScreen extends StatelessWidget {
     );
   }
 
+// YES, NO(SEATS) , GOOD, BAD(Behaviour)
   buildMultiOptions(String s, BuildContext context, var labels, var values) {
     return Container(
       padding: const EdgeInsets.all(8),
@@ -138,7 +159,8 @@ class FeedbackScreen extends StatelessWidget {
           userInputData[s] = value!;
         },
         // ignore: deprecated_member_use
-        selectedColor: Theme.of(context).accentColor,
+        selectedColor: Colors.pink[100]!,
+        enableShape: true,
       ),
     );
   }
@@ -147,16 +169,12 @@ class FeedbackScreen extends StatelessWidget {
     return TextField(
         autofocus: false,
         onChanged: (ss) {
-          userInputData[s] = ss;
-          print(ss);
+          userInputData["remark"] = ss;
         },
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           labelText: "Write Your Remark Here!",
-          //  focusedBorder: OutlineInputBorder(
-          //           borderSide: BorderSide(color: Colors.greenAccent, width: 2.0),
-          //       ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue, width: 2.0),
+            borderSide: BorderSide(color: Colors.pink[200]!, width: 2.0),
           ),
         ));
   }
@@ -170,12 +188,16 @@ class FeedbackScreen extends StatelessWidget {
       var doc = await collectionRef.doc(docId).get();
       return doc.exists;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
-  final ButtonStyle style =
-      ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
+  final ButtonStyle style = ElevatedButton.styleFrom(
+      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      elevation: 3,
+      primary: Colors.pink[200],
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10));
+
   buildSubmitButton() {
     return Container(
       margin: const EdgeInsets.all(20),
@@ -183,77 +205,23 @@ class FeedbackScreen extends StatelessWidget {
         style: style,
         onPressed: () async {
           // ignore: avoid_print
-          print("Data is Available for Transmission");
-          bool driverdocExists =
-              await checkIfDocExists(data[1].toLowerCase(), "driver");
-          print(driverdocExists.toString());
+          var collectionref = FirebaseFirestore.instance.collection('driver');
+          var doc = await collectionref.doc(data[1].toLowerCase()).get();
+
+          if (!doc.exists) {
+            setDriver(userInputData, data);
+          } else {
+            updateDriver(userInputData, data);
+          }
+
           bool busdocExits = await checkIfDocExists(data[0], "bus");
-          if (driverdocExists) {
-            userInputData.forEach((key, value) {
-              FirebaseFirestore.instance
-                  .collection("driver")
-                  .doc(data[1].toLowerCase())
-                  .update({
-                "driverName": data[1].toLowerCase(),
-                "reviews": FieldValue.arrayUnion([
-                  {
-                    "driverName": data[1].toLowerCase(),
-                    "busNum": data[0],
-                    "from": data[2],
-                    "to": data[3],
-                    "pace": userInputData["pace"],
-                    "driverRate": userInputData["driverRate"],
-                    "driverBehaviour": userInputData["driverBehaviour"],
-                    "remark": userInputData["remark"],
-                    "overallRate": userInputData["overallRate"]
-                  }
-                ])
-              });
-            });
-          } else {
-            userInputData.forEach((key, value) {
-              FirebaseFirestore.instance
-                  .collection("driver")
-                  .doc(data[1].toLowerCase())
-                  .set({
-                "driverName": data[1].toLowerCase(),
-                "reviews": [
-                  {
-                    "driverName": data[1].toLowerCase(),
-                    "busNum": data[0],
-                    "from": data[2],
-                    "to": data[3],
-                    "pace": userInputData["pace"],
-                    "driverRate": userInputData["driverRate"],
-                    "driverBehaviour": userInputData["driverBehaviour"],
-                    "remark": userInputData["remark"],
-                    "overallRate": userInputData["overallRate"]
-                  }
-                ]
-              });
-            });
-          }
+
           if (busdocExits) {
-            FirebaseFirestore.instance.collection("bus").doc(data[0]).update({
-              "reviews": FieldValue.arrayUnion([
-                {
-                  "busNo": data[0],
-                  "busInfra": userInputData["busInfra"],
-                  "busSeats": userInputData["busSeats"]
-                }
-              ])
-            });
+            updateBus(userInputData, data);
           } else {
-            FirebaseFirestore.instance.collection("bus").doc(data[0]).set({
-              "reviews": [
-                {
-                  "busNo": data[0],
-                  "busInfra": userInputData["busInfra"],
-                  "busSeats": userInputData["busSeats"]
-                }
-              ]
-            });
+            SetBus(userInputData, data);
           }
+
           Navigator.push(
               context, MaterialPageRoute(builder: (ctx) => ThankYouScreen()));
         },
@@ -271,4 +239,6 @@ class FeedbackScreen extends StatelessWidget {
               DecorationImage(image: AssetImage(assetPhoto), fit: BoxFit.fill)),
     );
   }
+
+  void updateData() {}
 }
