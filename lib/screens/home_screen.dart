@@ -16,28 +16,44 @@ class HomeScreen extends StatelessWidget {
       body: Stack(
         children: [
           buildGifContainer(),
-          Container(
-            // color: Colors.blue,
-            padding: const EdgeInsets.fromLTRB(0.0, 160.0, 0.0, 120.0),
-            alignment: Alignment.topCenter,
-            child: ElevatedButton(
-              style: style,
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const QRScanPage()));
-              },
-              child: const Text(
-                'Scan QR',
-                style: TextStyle(
-                    color: Color.fromRGBO(
-                      30,
-                      202,
-                      177,
-                      100,
+          Align(
+            child: SizedBox(
+              height: 450,
+              width: 400,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: const Text(
+                      "APSRTC Online Passenger Review",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 32,
+                      ),
                     ),
-                    fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    // color: Colors.blue,
+                    padding: const EdgeInsets.fromLTRB(0.0, 20, 0.0, 120.0),
+                    alignment: Alignment.topCenter,
+                    child: ElevatedButton(
+                      style: style,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const QRScanPage()));
+                      },
+                      child: Text(
+                        'Scan QR',
+                        style: TextStyle(
+                            color: Colors.blue[900],
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

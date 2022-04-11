@@ -1,9 +1,8 @@
-import 'package:bus_review/screens/BusScreen.dart';
-import 'package:bus_review/screens/DriverScreen.dart';
+import 'package:bus_review/screens/bus_screen.dart';
+import 'package:bus_review/screens/driver_screen.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({Key? key}) : super(key: key);
@@ -28,7 +27,7 @@ class _AdminScreenState extends State<AdminScreen> {
         body: Stack(children: [
       buildBackgroundImage(),
       Center(
-        child: Container(
+        child: SizedBox(
           height: 500,
           width: 300,
           child: Column(
@@ -46,9 +45,9 @@ class _AdminScreenState extends State<AdminScreen> {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              colorFilter: new ColorFilter.mode(
+              colorFilter: ColorFilter.mode(
                   Colors.white.withOpacity(0.3), BlendMode.dstATop),
-              image: AssetImage("assets/bus.png"))),
+              image: const AssetImage("assets/bus.png"))),
     );
   }
 
@@ -58,13 +57,13 @@ class _AdminScreenState extends State<AdminScreen> {
         if (dbName == "driver") {
           Navigator.push(context, MaterialPageRoute(
             builder: (context) {
-              return DriverScreen();
+              return const DriverScreen();
             },
           ));
         } else {
           Navigator.push(context, MaterialPageRoute(
             builder: (context) {
-              return BusScreen();
+              return const BusScreen();
             },
           ));
         }
@@ -72,7 +71,7 @@ class _AdminScreenState extends State<AdminScreen> {
       child: Container(
         height: 200,
         width: 300,
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         child: Stack(
           children: [
             //driver ellipse
@@ -103,7 +102,7 @@ class _AdminScreenState extends State<AdminScreen> {
     return Center(
       child: Text(
         buttonName,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
       ),
     );
   }
