@@ -51,27 +51,42 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     String? qrText = widget.barcode?.code;
 
     if (qrText != null) data = qrText.split(",");
-    return Scaffold(
-        body: Stack(children: [
-      buildBackGround("assets/form_back.jpg"),
-      // Container(
-      //   color: Colors.pink[200],
-      // ),
-      SingleChildScrollView(
-          child: Column(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              buildDataContainer(data, context),
-              buildQuestionsContainer(),
-              buildSubmitButton()
-            ],
-          ),
-        ],
-      )),
-    ]));
+    return (data.length == 6)
+        ? Scaffold(
+            body: Stack(children: [
+            buildBackGround("assets/form_back.jpg"),
+            // Container(
+            //   color: Colors.pink[200],
+            // ),
+            SingleChildScrollView(
+                child: Column(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    buildDataContainer(data, context),
+                    buildQuestionsContainer(),
+                    buildSubmitButton()
+                  ],
+                ),
+              ],
+            )),
+          ]))
+        : const Scaffold(
+            body: Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "Invalid QR Code! Try With Valid One ",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                      fontSize: 48),
+                ),
+              ),
+            ),
+          );
   }
 
 //user form
@@ -91,13 +106,16 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildQuestion("How do you rate pace of the driver ?"),
+              buildQuestion(
+                  "How do you rate the speed of the driver ?\n(5-Good,3-Normal,1-Too Fast)"),
               buildRating("pace"),
-              buildQuestion("How much rating you give for driver?"),
+              buildQuestion(
+                  "Is the driver following traffic rules and the timings?"),
               buildRating("driverRate"),
-              buildQuestion("Rate bus infrastructure?"),
+              buildQuestion("Rate bus infrastructure & seat Condition?"),
               buildRating("busInfra"),
-              buildQuestion("Does the bus have enough seats?"),
+              buildQuestion(
+                  "Does the driver allowing more passengers than available seats?"),
               buildMultiOptions(
                   "busSeats", context, ["Yes", "No"], ["Yes", "No"]),
               buildQuestion("How is driver’s behaviour?"),

@@ -62,6 +62,7 @@ updateBus(userInputData, data) {
 
 SetBus(userInputData, data) {
   FirebaseFirestore.instance.collection("bus").doc(data[0]).set({
+    "busNo": data[0],
     "reviews": [
       {
         "busNo": data[0],

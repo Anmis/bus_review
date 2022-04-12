@@ -13,57 +13,63 @@ double getRating(doc) {
 }
 
 buildDataContainer(List data, BuildContext context) {
-  return Container(
-    width: MediaQuery.of(context).size.width - 40,
-    height: 300,
-    margin: const EdgeInsets.only(top: 70, left: 5, right: 5),
-    padding: const EdgeInsets.all(20),
-    // decoration: const BoxDecoration(boxShadow: [
-    //   BoxShadow(offset: Offset(0, 4), blurRadius: 4, color: Colors.black26)
-    // ],),
-    decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(20))),
+  try {
+    return Container(
+      width: MediaQuery.of(context).size.width - 40,
+      height: 300,
+      margin: const EdgeInsets.only(top: 70, left: 5, right: 5),
+      padding: const EdgeInsets.all(20),
+      // decoration: const BoxDecoration(boxShadow: [
+      //   BoxShadow(offset: Offset(0, 4), blurRadius: 4, color: Colors.black26)
+      // ],),
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(20))),
 
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          "Details",
-          style: GoogleFonts.roboto(
-              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue),
-          textAlign: TextAlign.center,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                buildHeadingContainer("Bus Number"),
-                buildHeadingContainer("Driver Name"),
-                buildHeadingContainer("From"),
-                buildHeadingContainer("To"),
-                buildHeadingContainer("Scheduled Start"),
-                buildHeadingContainer("Scheduled End"),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                buildOppositeContainer(data[0]),
-                buildOppositeContainer(data[1]),
-                buildOppositeContainer(data[2]),
-                buildOppositeContainer(data[3]),
-                buildOppositeContainer((data.length == 4) ? "NA" : data[4]),
-                buildOppositeContainer((data.length == 4) ? "NA" : data[5]),
-              ],
-            )
-          ],
-        ),
-      ],
-    ),
-  );
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Details",
+            style: GoogleFonts.roboto(
+                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue),
+            textAlign: TextAlign.center,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  buildHeadingContainer("Bus Number"),
+                  buildHeadingContainer("Driver Name"),
+                  buildHeadingContainer("From"),
+                  buildHeadingContainer("To"),
+                  buildHeadingContainer("Scheduled Start"),
+                  buildHeadingContainer("Scheduled End"),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  buildOppositeContainer(data[0]),
+                  buildOppositeContainer(data[1]),
+                  buildOppositeContainer(data[2]),
+                  buildOppositeContainer(data[3]),
+                  buildOppositeContainer((data.length == 4) ? "NA" : data[4]),
+                  buildOppositeContainer((data.length == 4) ? "NA" : data[5]),
+                ],
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  } on Exception {
+    return const Center(
+      child: Text("Invalid QR Code"),
+    );
+  }
 }
 
 buildHeadingContainer(String s) {

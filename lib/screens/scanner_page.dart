@@ -1,7 +1,9 @@
 import 'dart:io';
 // import 'package:bus_review/screens/feedback_screen.dart';
+import 'package:bus_review/screens/admin_pin.dart';
 import 'package:bus_review/screens/admin_screen.dart';
 import 'package:bus_review/screens/feedback_screen.dart';
+import 'package:bus_review/screens/pin_codeFields.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -43,18 +45,28 @@ class _QRScanPageState extends State<QRScanPage> {
 
   @override
   Widget build(BuildContext context) {
-    return (barcode == null)
-        ? SafeArea(
-            child: Scaffold(
-                body: (status.isGranted)
-                    ? buildQrView(context)
-                    : const Center(
-                        child: Text("Please Allow camera Permissions"))))
-        : (barcode?.code == "226612@admin#!")
-            ? const AdminScreen()
-            : FeedbackScreen(
-                bar: barcode,
-              );
+    try {
+      return (barcode == null)
+          ? SafeArea(
+              child: Scaffold(
+                  body: (status.isGranted)
+                      ? buildQrView(context)
+                      : const Center(
+                          child: Text("Please Allow camera Permissions"))))
+          : (barcode?.code == "226612@admin#!")
+              ? AdminPin()
+              : FeedbackScreen(
+                  bar: barcode,
+                );
+    } on Exception {
+      return Scaffold(
+        body: Container(
+          child: Center(
+            child: Text("Invalid QR code Scan"),
+          ),
+        ),
+      );
+    }
   }
 
   Widget buildQrView(BuildContext context) {
